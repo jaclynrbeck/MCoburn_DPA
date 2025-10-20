@@ -98,16 +98,6 @@ tmp <- lapply(names(all_tests[[1]]), function(i) {
 })
 names(tmp) <- names(all_tests[[1]])
 
-coefs <- clust_ests$DAM
-beta <- colMeans(coefs)
-SEsq <- clust_ses$DAM**2
-Vin <- colMeans(SEsq)
-
-beta.m <- do.call(rbind, lapply(1:nrow(coefs), function(x) t(beta)))
-Vbtw <- colSums((coefs-beta.m)**2)/(nrow(coefs)-1)
-SEpooled <- sqrt(Vin + Vbtw + Vbtw/nrow(coefs))
-Wpooled <- beta / SEpooled
-
 sig <- lapply(names(clust_ests), function(C) {
   data <- do.call(rbind, lapply(1:ncol(clust_ests[[C]]), function(P) {
     pooled.s <- mice::pool.scalar(clust_ests[[C]][,P], clust_ses[[C]][,P]**2, n=48)
